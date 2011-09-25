@@ -1,0 +1,60 @@
+#                                                                        #
+# Configuration for the FLOW3 Framework                                  #
+#                                                                        #
+# This file contains additions to the base configuration for the FLOW3   #
+# Framework when it runs in Testing context.                             #
+#                                                                        #
+# Don't modify this file - instead put your own additions into the       #
+# global Configuration directory and its sub directories.                #
+#                                                                        #
+
+TYPO3:
+
+  FLOW3:
+
+    configuration:
+      compileConfigurationFiles: n
+
+    error:
+      exceptionHandler:
+        className: 'TYPO3\FLOW3\Error\DebugExceptionHandler'
+      errorHandler:
+        exceptionalErrors: [%E_USER_ERROR%, %E_RECOVERABLE_ERROR%, %E_WARNING%, %E_NOTICE%, %E_USER_WARNING%, %E_USER_NOTICE%, %E_STRICT%]
+
+    log:
+      systemLogger:
+        backendOptions: { logFileURL: %FLOW3_PATH_DATA%Logs/System_Testing.log, createParentDirectories: y, severityThreshold: %LOG_DEBUG% }
+      securityLogger:
+        backendOptions: { logFileURL: %FLOW3_PATH_DATA%Logs/Security_Testing.log, createParentDirectories: y, severityThreshold: %LOG_DEBUG% }
+
+    object:
+      registerFunctionalTestClasses: y
+
+    persistence:
+      backendOptions:
+        driver: 'pdo_sqlite'
+        path: ':memory:'
+        username: null
+        password: null
+
+    security:
+      authentication:
+        authenticationStrategy: anyToken
+
+        providers:
+          DefaultProvider:
+            providerClass: TYPO3\FLOW3\Security\Authentication\Provider\TestingProvider
+
+    # Setting for functional tests to test global objects in runtime evaluations
+    aop:
+      globalObjects:
+        testContext: TYPO3\FLOW3\Tests\Functional\AOP\Fixtures\TestContext
+
+    # Settings for functional tests to test setting designator and setting injection
+    tests:
+      functional:
+        aop:
+          pointcutExpressionSettingFilterOptionA: y
+        dependencyInjection:
+          singletonConstructorArgument: 'setting injected singleton value'
+          prototypeConstructorArgument: 'setting injected property value'
